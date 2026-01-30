@@ -1,74 +1,78 @@
-# brain-tumor
+# Brain Tumor Detection using OpenCV
+
 This project implements a comprehensive brain tumor detection system developed in both MATLAB and Python using OpenCV. The system uses watershed segmentation and morphological operations to detect brain tumors in MRI images, with implementations in both environments for maximum flexibility and accessibility.
-Features
 
-    Grayscale Conversion: Converts MRI images to grayscale for processing
-    Binary Thresholding: Creates binary images for segmentation
-    Watershed Segmentation: Uses Sobel filters and watershed algorithm
-    Morphological Processing: Detects tumor regions (displayed as WHITE areas)
-    Otsu Thresholding: Alternative segmentation method
-    Tumor Classification: Classifies tumors as Benign, Malignant, or No Tumor
-    GUI Interface: User-friendly interface similar to the original MATLAB version
+## Features
 
-Installation
+- **Grayscale Conversion**: Converts MRI images to grayscale for processing
+- **Binary Thresholding**: Creates binary images for segmentation
+- **Watershed Segmentation**: Uses Sobel filters and watershed algorithm
+- **Morphological Processing**: Detects tumor regions (displayed as WHITE areas)
+- **Otsu Thresholding**: Alternative segmentation method
+- **Tumor Classification**: Classifies tumors as Benign, Malignant, or No Tumor
+- **GUI Interface**: User-friendly interface similar to the original MATLAB version
 
-    Install Python dependencies:
+## Installation
 
+1. **Install Python dependencies:**
+```bash
 pip install -r requirements.txt
+```
 
-    For Windows users, if tkinter is not available:
-
+2. **For Windows users, if tkinter is not available:**
+```bash
 pip install tk
+```
 
-Usage
-Method 1: Compact GUI (Recommended)
+## Usage
 
+### Method 1: Compact GUI (Recommended)
+```bash
 python brain_tumor_compact_gui.py
+```
+- Optimized for all screen sizes (900x600 minimum)
+- Switch between different views using buttons
+- Real-time results display
 
-    Optimized for all screen sizes (900x600 minimum)
-    Switch between different views using buttons
-    Real-time results display
-
-Method 2: Command Line with File Dialog
-
+### Method 2: Command Line with File Dialog
+```bash
 python brain_tumor_detection.py
+```
+- Select image through file dialog
+- Results displayed in matplotlib window
 
-    Select image through file dialog
-    Results displayed in matplotlib window
-
-Method 3: Test All Images
-
+### Method 3: Test All Images
+```bash
 python test_detection.py
+```
+- Automatically processes all images in the current directory
+- Saves results as PNG files
 
-    Automatically processes all images in the current directory
-    Saves results as PNG files
+## Key Differences from MATLAB Version
 
-Key Differences from MATLAB Version
-Tumor Visualization
+### Tumor Visualization
+- **WHITE areas** in the "Morphological Tumor" image represent detected tumor regions
+- This matches the MATLAB implementation where tumor areas appear as white pixels
 
-    WHITE areas in the "Morphological Tumor" image represent detected tumor regions
-    This matches the MATLAB implementation where tumor areas appear as white pixels
+### Processing Pipeline
+1. **Load Image**: Resize to 200x200 pixels
+2. **Binary Image**: Threshold at 0.6 (60%)
+3. **Watershed**: Apply Sobel filters and watershed segmentation
+4. **Morphological Processing**: 
+   - Opening operation with disk kernel (radius 5)
+   - Reconstruction and dilation
+   - Final tumor mask (white = tumor)
+5. **Thresholding**: Otsu's method with small object removal
+6. **Classification**: Based on tumor area in cm²
 
-Processing Pipeline
+### Classification Criteria
+- **No Tumor**: 0 cm²
+- **Benign Tumor**: ≤ 2.37 cm²
+- **Malignant Tumor**: > 2.37 cm²
 
-    Load Image: Resize to 200x200 pixels
-    Binary Image: Threshold at 0.6 (60%)
-    Watershed: Apply Sobel filters and watershed segmentation
-    Morphological Processing:
-        Opening operation with disk kernel (radius 5)
-        Reconstruction and dilation
-        Final tumor mask (white = tumor)
-    Thresholding: Otsu's method with small object removal
-    Classification: Based on tumor area in cm²
+## File Structure
 
-Classification Criteria
-
-    No Tumor: 0 cm²
-    Benign Tumor: ≤ 2.37 cm²
-    Malignant Tumor: > 2.37 cm²
-
-File Structure
-
+```
 ├── brain_tumor_detection.py       # Core detection class
 ├── brain_tumor_compact_gui.py     # Compact GUI application
 ├── test_detection.py              # Batch testing script
@@ -77,51 +81,49 @@ File Structure
 ├── BrainMRI_GUI.m                 # Original MATLAB GUI
 ├── BrainTumor.mlx                 # Original MATLAB script
 └── *.jpg, *.png, *.jpeg          # Sample MRI images
+```
 
-Technical Details
-Morphological Operations
+## Technical Details
 
+### Morphological Operations
 The system uses morphological operations to isolate tumor regions:
+- **Opening**: Removes noise and small objects
+- **Reconstruction**: Restores important structures
+- **Dilation**: Expands tumor boundaries
+- **Complement**: Inverts to highlight tumor areas as white
 
-    Opening: Removes noise and small objects
-    Reconstruction: Restores important structures
-    Dilation: Expands tumor boundaries
-    Complement: Inverts to highlight tumor areas as white
+### Watershed Segmentation
+- Applies Sobel edge detection
+- Calculates gradient magnitude
+- Uses watershed algorithm for region segmentation
 
-Watershed Segmentation
+### Area Calculation
+- Pixel dimensions: 0.0508 cm × 0.0508 cm
+- Converts pixel count to cm² for medical relevance
 
-    Applies Sobel edge detection
-    Calculates gradient magnitude
-    Uses watershed algorithm for region segmentation
-
-Area Calculation
-
-    Pixel dimensions: 0.0508 cm × 0.0508 cm
-    Converts pixel count to cm² for medical relevance
-
-Sample Output
+## Sample Output
 
 The system displays 6 images:
+1. **Grayscale MRI**: Original processed image
+2. **Binary Image**: Thresholded version
+3. **Watershed Segmentation**: Color-coded regions
+4. **Morphological Tumor**: **WHITE areas indicate tumor**
+5. **Thresholding Segmentation**: Otsu-based segmentation
+6. **Analysis Results**: Tumor area and classification
 
-    Grayscale MRI: Original processed image
-    Binary Image: Thresholded version
-    Watershed Segmentation: Color-coded regions
-    Morphological Tumor: WHITE areas indicate tumor
-    Thresholding Segmentation: Otsu-based segmentation
-    Analysis Results: Tumor area and classification
+## Troubleshooting
 
-Troubleshooting
-Common Issues
+### Common Issues
+1. **Import Error**: Install missing packages with `pip install -r requirements.txt`
+2. **Tkinter Error**: Install tkinter separately or use command-line version
+3. **Image Loading Error**: Ensure image files are in supported formats (PNG, JPG, JPEG)
 
-    Import Error: Install missing packages with pip install -r requirements.txt
-    Tkinter Error: Install tkinter separately or use command-line version
-    Image Loading Error: Ensure image files are in supported formats (PNG, JPG, JPEG)
+### Performance Notes
+- Images are automatically resized to 200×200 pixels for consistent processing
+- Processing time is typically under 2 seconds per image
+- GUI updates in real-time after image selection
 
-Performance Notes
+## Credits
 
-    Images are automatically resized to 200×200 pixels for consistent processing
-    Processing time is typically under 2 seconds per image
-    GUI updates in real-time after image selection
-
-Credits
-Original MATLAB and Python OpenCV implementations developed by "Rizwan Aleem Tahha | M Ahsan | Moiz Ahmed | Saim Asad" Both implementations maintain the same algorithm and produce consistent results across platforms
+Original MATLAB and Python OpenCV implementations developed by "Rizwan Aleem Tahha | M Ahsan | Moiz Ahmed | Saim Asad"
+Both implementations maintain the same algorithm and produce consistent results across platforms
